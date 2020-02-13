@@ -11,21 +11,34 @@
     <textarea id="sample-text"></textarea>
     <button onClick="fire()">click me</button>
 
+    <div id='messages'></div>
+
     <script>
+        const addMessage = (message) => {
+            const para = document.createElement('p');
+            const node = document.createTextNode(message);
+            para.appendChild(node);
+            const messageArea = document.getElementById('messages');
+            messageArea.appendChild(para);
+        };
+
         const ws = new WebSocket('ws://localhost:40510');    // event emmited when connected
 
         const fire = () => {
-            const text = document.getElementById('sample-text').value;
-            console.log('text', text)
-            ws.send(text);
+            const displayText = `me: ${document.getElementById('sample-text').value}`
+            addMessage(displayText);
+            ws.send(document.getElementById('sample-text').value);
         }
 
         ws.onopen =  () => {
             console.log('websocket is connected ...')        // sending a send event to websocket server
             ws.send('connected')
         }    // event emmited when receiving message
-        ws.onmessage =  (ev) => {
-            console.log(ev);
+
+        ws.onmessage = (event) => {
+            const text = `other: ${event.data}`;
+            addMessage(text);
+            console.log(event);
         }
     </script>
 </body>
