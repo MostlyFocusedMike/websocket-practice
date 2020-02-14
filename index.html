@@ -8,10 +8,8 @@
 <script>
     const addMessage = (message) => {
         const pTag = document.createElement('p');
-        const textNode = document.createTextNode(message);
-        pTag.appendChild(textNode);
-        const messageDiv = document.getElementById('messages');
-        messageDiv.appendChild(pTag);
+        pTag.appendChild(document.createTextNode(message));
+        document.getElementById('messages').appendChild(pTag);
     };
 
     const getEl = (id) => document.getElementById(id);
@@ -21,7 +19,6 @@
         getEl('message').value = '';
     }
 
-    // event emmited when connected
     const ws = new WebSocket('ws://localhost:3030');
     ws.onopen = () => { console.log('Now connected') }
 
