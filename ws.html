@@ -1,50 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Websocket Practice</title>
-</head>
+<html lang="en"><title>Websocket Practice</title></head>
 <body>
-    <h1>Open the console to see the messages</h1>
-    <input id="username"/>
-    <textarea id="message"></textarea>
-    <button onClick="fire()">click me</button>
+<input id="username"/>
+<textarea id="message"></textarea>
+<button onClick="fire()">click me</button>
+<div id='messages'></div>
 
-    <div id='messages'></div>
+<script>
+    const addMessage = (message) => {
+        const para = document.createElement('p');
+        const node = document.createTextNode(message);
+        para.appendChild(node);
+        const messageArea = document.getElementById('messages');
+        messageArea.appendChild(para);
+    };
 
-    <script>
-        const ws = new WebSocket('ws://localhost:40510');    // event emmited when connected
+    const getUsername = () => document.getElementById('username').value;
 
-        const addMessage = (message) => {
-            const para = document.createElement('p');
-            const node = document.createTextNode(message);
-            para.appendChild(node);
-            const messageArea = document.getElementById('messages');
-            messageArea.appendChild(para);
-        };
+    const fire = () => {
+        ws.send(`${getUsername() || 'anonymous'}: ${document.getElementById('message').value}`);
+    }
 
-        const getUsername = () => document.getElementById('username').value;
+    // event emmited when connected
+    const ws = new WebSocket('ws://localhost:40510');
+    ws.onopen = () => {
+        console.log('websocket is connected ...')
+        ws.send('connected')
+    }
 
-        const fire = () => {
-            ws.send(`${getUsername()}: ${document.getElementById('message').value}`);
-        }
-
-        ws.onopen =  () => {
-            console.log('websocket is connected ...')        // sending a send event to websocket server
-            ws.send('connected')
-        }
-
-        ws.onmessage = (event) => {
-            const messages = JSON.parse(event.data)
-            messages.forEach(message => {
-                const formattedMessage = getUsername()
-                    ? message.replace(getUsername(), 'you')
-                    : message;
-                addMessage(formattedMessage);
-            })
-        }
-    </script>
+    ws.onmessage = (event) => {
+        const messages = JSON.parse(event.data)
+        messages.forEach(message => { addMessage(message); })
+    }
+</script>
 </body>
 </html>
