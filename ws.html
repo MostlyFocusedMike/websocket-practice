@@ -8,12 +8,15 @@
 </head>
 <body>
     <h1>Open the console to see the messages</h1>
-    <textarea id="sample-text"></textarea>
+    <input id="username"/>
+    <textarea id="message"></textarea>
     <button onClick="fire()">click me</button>
 
     <div id='messages'></div>
 
     <script>
+        const ws = new WebSocket('ws://localhost:40510');    // event emmited when connected
+
         const addMessage = (message) => {
             const para = document.createElement('p');
             const node = document.createTextNode(message);
@@ -22,12 +25,12 @@
             messageArea.appendChild(para);
         };
 
-        const ws = new WebSocket('ws://localhost:40510');    // event emmited when connected
+
+        const getUsername = () => document.getElementById('username').value;
 
         const fire = () => {
-            const displayText = `me: ${document.getElementById('sample-text').value}`
-            addMessage(displayText);
-            ws.send(document.getElementById('sample-text').value);
+            const message = document.getElementById('message').value;
+            ws.send(`${getUsername()}: ${message}`);
         }
 
         ws.onopen =  () => {
@@ -36,8 +39,8 @@
         }    // event emmited when receiving message
 
         ws.onmessage = (event) => {
-            const text = `other: ${event.data}`;
-            addMessage(text);
+            console.log('username: ', getUsername());
+            addMessage(event.data.replace(getUsername(), 'you'));
             console.log(event);
         }
     </script>

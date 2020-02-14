@@ -19,8 +19,9 @@ const wss = new WebSocket.Server({ port: 40510});
 
 wss.on('connection', (ws) => {
     ws.on('message', (data) => {
+        console.log('data: ', data);
         wss.clients.forEach((client) => {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
+            if (data !== 'connected' && client.readyState === WebSocket.OPEN) { // this would send it to every client BUT the connection that sent it
                 console.log('hinge');
                 client.send(data);
             }
