@@ -25,22 +25,20 @@
             messageArea.appendChild(para);
         };
 
-
         const getUsername = () => document.getElementById('username').value;
 
         const fire = () => {
-            const message = document.getElementById('message').value;
-            ws.send(`${getUsername()}: ${message}`);
+            ws.send(`${getUsername()}: ${document.getElementById('message').value}`);
         }
 
         ws.onopen =  () => {
             console.log('websocket is connected ...')        // sending a send event to websocket server
             ws.send('connected')
-        }    // event emmited when receiving message
+        }
 
         ws.onmessage = (event) => {
-            console.log('username: ', getUsername());
-            addMessage(event.data.replace(getUsername(), 'you'));
+            const messages = JSON.parse(event.data)
+            addMessage(messages[0].replace(getUsername(), 'you'));
             console.log(event);
         }
     </script>

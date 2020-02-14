@@ -23,7 +23,8 @@ wss.on('connection', (ws) => {
         wss.clients.forEach((client) => {
             if (data !== 'connected' && client.readyState === WebSocket.OPEN) { // this would send it to every client BUT the connection that sent it
                 console.log('hinge');
-                client.send(data);
+                const messages = JSON.stringify([data]);
+                client.send(messages);
             }
         });
     });
