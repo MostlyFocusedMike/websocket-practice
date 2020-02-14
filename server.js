@@ -3,7 +3,7 @@
 const express = require('express')
 const app = express()
 
-let logs = 'Start chatting!';
+let logs = ['Start Chatting!'];
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/ws.html');
@@ -17,15 +17,21 @@ const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({ port: 40510});
 
+// on connection the websocket connection client is passed in
+// you can keep track of clients so send certain messages to certain clients
 wss.on('connection', (ws) => {
     ws.on('message', (data) => {
-        console.log('data: ', data);
         wss.clients.forEach((client) => {
-            if (data !== 'connected' && client.readyState === WebSocket.OPEN) { // this would send it to every client BUT the connection that sent it
-                console.log('hinge');
-                const messages = JSON.stringify([data]);
-                client.send(messages);
+            if (client.readyState === WebSocket.OPEN) {
+                if (data === 'connected' && ws === client) {
+                    console.log('hello there')
+                    client.send(JSON.stringify(logs));
+                } else if (data !== 'connected') {
+                    const messages = JSON.stringify([data]);
+                    client.send(messages);
+                }
             }
+
         });
     });
 });
