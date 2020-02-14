@@ -14,7 +14,7 @@ app.listen(8765, () => {
 
 const WebSocket = require('ws');
 
-const socketServer = new WebSocket.Server({ port: 40510});
+const socketServer = new WebSocket.Server({ port: 3030});
 let logs = ['Start Chatting!'];
 
 // on connection the websocket connection client is passed in

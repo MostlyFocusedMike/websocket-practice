@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><title>Websocket Practice</title></head>
 <body>
-<input id="username"/>
-<textarea id="message"></textarea>
+<input id="name"/>
+<textarea id="message" ></textarea>
 <button onClick="fire()">click me</button>
 <div id='messages'></div>
-
 <script>
     const addMessage = (message) => {
         const pTag = document.createElement('p');
@@ -15,17 +14,16 @@
         messageDiv.appendChild(pTag);
     };
 
-    const getUsername = () => document.getElementById('username').value;
+    const getEl = (id) => document.getElementById(id);
 
     const fire = () => {
-        ws.send(`${getUsername() || 'anonymous'}: ${document.getElementById('message').value}`);
+        ws.send(`${getEl('name').value || '???'}: ${getEl('message').value}`);
+        getEl('message').value = '';
     }
 
     // event emmited when connected
-    const ws = new WebSocket('ws://localhost:40510');
-    ws.onopen = () => {
-        console.log('websocket is connected ...')
-    }
+    const ws = new WebSocket('ws://localhost:3030');
+    ws.onopen = () => { console.log('Now connected') }
 
     ws.onmessage = (event) => {
         const messages = JSON.parse(event.data)
