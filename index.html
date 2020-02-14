@@ -8,11 +8,11 @@
 
 <script>
     const addMessage = (message) => {
-        const para = document.createElement('p');
-        const node = document.createTextNode(message);
-        para.appendChild(node);
-        const messageArea = document.getElementById('messages');
-        messageArea.appendChild(para);
+        const pTag = document.createElement('p');
+        const textNode = document.createTextNode(message);
+        pTag.appendChild(textNode);
+        const messageDiv = document.getElementById('messages');
+        messageDiv.appendChild(pTag);
     };
 
     const getUsername = () => document.getElementById('username').value;
@@ -25,7 +25,6 @@
     const ws = new WebSocket('ws://localhost:40510');
     ws.onopen = () => {
         console.log('websocket is connected ...')
-        ws.send('connected')
     }
 
     ws.onmessage = (event) => {
