@@ -38,8 +38,12 @@
 
         ws.onmessage = (event) => {
             const messages = JSON.parse(event.data)
-            addMessage(messages[0].replace(getUsername(), 'you'));
-            console.log(event);
+            messages.forEach(message => {
+                const formattedMessage = getUsername()
+                    ? message.replace(getUsername(), 'you')
+                    : message;
+                addMessage(formattedMessage);
+            })
         }
     </script>
 </body>
